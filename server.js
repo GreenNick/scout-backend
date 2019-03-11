@@ -97,14 +97,51 @@ const fetchRanks = teams =>
     }
   }))
 
+const fetchAwards = teams =>
+  Promise.all(teams.map(async team => {
+    const url = `https://api.vexdb.io/v1/get_awards?season=current&team=${team}`
+    const awards = await pipe(
+      getResponse,
+      getJson,
+      getResult
+    )(url)
+
+    return awards.reduce((acc, currVal) => {
+      switch (currVal.name) {
+        case "Tournament Champions (VRC/VEXU)":
+        case "Tournament Champions (High School)":
+          acc.awardChamp++
+          break
+        case "Robot Skills Champion (VRC/VEXU)":
+        case "Robot Skills Champion (High School)":
+          acc.awardSkills++
+          break
+        case "Excellence Award (VRC/VEXU)":
+        case "Excellence Award (High School)":
+          acc.awardExcel++
+          break
+        case "Design Award (VRC/VEXU)":
+        case "Design Award (High School)":
+          acc.awardDesign++
+          break
+        case "Judges Award (VRC/VEXU)":
+        case "Judges Award (High School)":
+          acc.awardJudge++
+          break
+      }
+      return acc
+    }, { team, awardChamp: 0, awardSkills: 0, awardExcel: 0, awardDesign: 0, awardJudge: 0 })
+  }))
+
 const centralizeData = async teams => {
   const skills = await fetchSkills(teams)
   const ranks = await fetchRanks(teams)
   const score = await fetchMatchScore(teams)
+  const awards = await fetchAwards(teams)
 
   return {
     teams: [...teams],
-    stats: [...skills, ...ranks, ...score]
+    stats: [...skills, ...ranks, ...score, ...awards]
   }
 }
 
