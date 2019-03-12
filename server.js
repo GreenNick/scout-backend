@@ -53,13 +53,13 @@ const fetchSkills = teams =>
     return skills.reduce((acc, currVal) => {
       switch (currVal.type) {
         case 0:
-          acc.driverSkills++
+          acc.driverSkills = currVal.score
           break
         case 1:
-          acc.progSkills++
+          acc.progSkills = currVal.score
           break
         case 2:
-          acc.totalSkills++
+          acc.totalSkills = currVal.score
           break
       }
       return acc
