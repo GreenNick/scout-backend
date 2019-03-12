@@ -28,7 +28,6 @@ const getResult = res => res.result
 const loadPage = html => cheerio.load(html)
 const scrapeTeams = $ => $('#data-table > tbody > tr > td:first-of-type')
 const teamsToArray = teams => teams.text().split('\n').map(trimWhitespace).filter(filterTruthy)
-const getSkills = res => res.size ? res.result[0].score : 0
 
 const fetchTeams = () => {
   const url = 'https://www.robotevents.com/robot-competitions/vex-robotics-competition/RE-VRC-18-6082.html'
@@ -44,14 +43,27 @@ const fetchTeams = () => {
 
 const fetchSkills = teams =>
   Promise.all(teams.map(async team => {
-    const url = `https://api.vexdb.io/v1/get_skills?season_rank=true&team=${team}&season=current&type=2`
+    const url = `https://api.vexdb.io/v1/get_skills?season_rank=true&team=${team}&season=current`
     const skills = await pipe(
       getResponse,
       getJson,
-      getSkills
+      getResult
     )(url)
 
-    return { team, skills }
+    return skills.reduce((acc, currVal) => {
+      switch (currVal.type) {
+        case 0:
+          acc.driverSkills++
+          break
+        case 1:
+          acc.progSkills++
+          break
+        case 2:
+          acc.robotSkills++
+          break
+      }
+      return acc
+    }, { team, driverSkills: 0, progSkills: 0, totalSkills: 0})
   }))
 
 const fetchMatchScore = teams =>
