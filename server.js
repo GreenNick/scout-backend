@@ -59,7 +59,7 @@ const fetchSkills = teams =>
           acc.progSkills++
           break
         case 2:
-          acc.robotSkills++
+          acc.totalSkills++
           break
       }
       return acc
