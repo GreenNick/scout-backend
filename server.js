@@ -171,7 +171,11 @@ const filterData = data =>
 
 const getData = pipe(centralizeData, filterData)
 
-res.header("Access-Control-Allow-Origin", "*")
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  next()
+})
 
 app.get('/api', async (req, res) => {
   const teams = await fetchTeams()
