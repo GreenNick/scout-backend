@@ -122,27 +122,32 @@ const fetchAwards = teams =>
       switch (currVal.name) {
         case "Tournament Champions (VRC/VEXU)":
         case "Tournament Champions (High School)":
+          acc.totalAwards++
           acc.awardChamp++
           break
         case "Robot Skills Champion (VRC/VEXU)":
         case "Robot Skills Champion (High School)":
+          acc.totalAwards++
           acc.awardSkills++
           break
         case "Excellence Award (VRC/VEXU)":
         case "Excellence Award (High School)":
+          acc.totalAwards++
           acc.awardExcel++
           break
         case "Design Award (VRC/VEXU)":
         case "Design Award (High School)":
+          acc.totalAwards++
           acc.awardDesign++
           break
         case "Judges Award (VRC/VEXU)":
         case "Judges Award (High School)":
+          acc.totalAwards++
           acc.awardJudge++
           break
       }
       return acc
-    }, { team, awardChamp: 0, awardSkills: 0, awardExcel: 0, awardDesign: 0, awardJudge: 0 })
+    }, { team, totalAwards: 0, awardChamp: 0, awardSkills: 0, awardExcel: 0, awardDesign: 0, awardJudge: 0 })
   }))
 
 const centralizeData = async teams => {
